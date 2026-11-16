@@ -1,0 +1,53 @@
+apiVersion: serving.kserve.io/v1alpha1
+kind: LLMInferenceService
+metadata:
+  name: gpu-large
+  namespace: openshift-lightspeed
+spec:
+  replicas: 2
+  model:
+    uri: hf://ibm-granite/granite-4.2-8b-fp8
+    name: hybrid-model
+  router:
+    gateway:
+      refs:
+        - name: gpu-large-router
+          namespace: openshift-lightspeed
+    route:
+      http:
+        refs:
+          - name: gpu-large-llmd
+    scheduler: {}
+  template:
+    nodeSelector:
+      inference: gpu-large
+    tolerations:
+      - key: inference
+        operator: Equal
+        value: gpu-large
+        effect: NoSchedule
+    containers:
+      - name: main
+        image: registry.redhat.io/rhaii/vllm-cuda-rhel9:3.5
+        env:
+          - name: VLLM_ADDITIONAL_ARGS
+            value: >-
+              --max-model-len=32768 --enable-auto-tool-choice --tool-call-parser=qwen3_coder
+              --reasoning-parser=nemotron_v3 --enable-prefix-caching
+          - name: HF_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: hf-token
+                key: HF_TOKEN
+                optional: true
+          - name: HF_HUB_OFFLINE
+            value: '0'
+        resources:
+          requests:
+            nvidia.com/gpu: '1'
+            cpu: '4'
+            memory: 16Gi
+          limits:
+            nvidia.com/gpu: '1'
+            cpu: '8'
+            memory: 24Gi

@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../hybrid-inference
+  - gateways.yaml
+  - routes.yaml
+  - cpu-small.yaml
+  - gpu-large.yaml
+patches:
+  - path: remove-direct.yaml
+configMapGenerator:
+  - name: praxis-config
+    namespace: openshift-lightspeed
+    behavior: merge
+    files:
+      - config.yaml=praxis-config.yaml

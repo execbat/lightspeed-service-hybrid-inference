@@ -1,0 +1,42 @@
+# Remove legacy resources from the rendered overlay only.
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: cpu-small
+  namespace: openshift-lightspeed
+$patch: delete
+---
+apiVersion: serving.kserve.io/v1alpha1
+kind: ServingRuntime
+metadata:
+  name: cpu-small-runtime
+  namespace: openshift-lightspeed
+$patch: delete
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cpu-small-models
+  namespace: openshift-lightspeed
+$patch: delete
+---
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: gpu-large
+  namespace: openshift-lightspeed
+$patch: delete
+---
+apiVersion: serving.kserve.io/v1alpha1
+kind: ServingRuntime
+metadata:
+  name: gpu-large-runtime
+  namespace: openshift-lightspeed
+$patch: delete
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gpu-large-models
+  namespace: openshift-lightspeed
+$patch: delete
