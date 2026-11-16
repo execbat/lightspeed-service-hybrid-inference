@@ -4,7 +4,7 @@ metadata:
   name: gpu-large
   namespace: openshift-lightspeed
 spec:
-  replicas: 2
+  replicas: 1
   model:
     uri: hf://ibm-granite/granite-4.2-8b-fp8
     name: hybrid-model

@@ -4,7 +4,7 @@ metadata:
   name: cpu-small
   namespace: openshift-lightspeed
 spec:
-  replicas: 2
+  replicas: 1
   model:
     uri: hf://Qwen/Qwen-AgentWorld-35B-A3B
     name: hybrid-model
